@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -23,3 +24,6 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('logout',  [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::resource('products', ProductController::class);
+Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');

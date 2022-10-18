@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use PDF;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Routing\Controller;
 use App\Http\Requests\ProductRequest;
 use Yajra\DataTables\Facades\DataTables;
 

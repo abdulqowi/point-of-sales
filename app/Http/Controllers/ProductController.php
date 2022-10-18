@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use App\Models\Product;
-use App\Models\Category;
-use Illuminate\Routing\Controller;
+use App\Models\{Category, Product};
 use App\Http\Requests\ProductRequest;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -26,7 +24,7 @@ class ProductController extends Controller
                 ->addColumn('action', function ($row) {
                     $btn =
                         '<div class="btn-group">
-                            <a class="badge badge-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                            <a class="badge bg-navy dropdown-toggle dropdown-icon" data-toggle="dropdown">
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showProduct" class="btn btn-sm btn-primary">View</a>
@@ -58,7 +56,6 @@ class ProductController extends Controller
     {
         $request->validated();
 
-        $productId = request('product_id');
         Product::updateOrCreate(
             ['id' => request('product_id')],
             [

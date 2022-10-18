@@ -4,7 +4,7 @@
 
 <!-- Content Header (Page header) -->
 <div class="content-header">
-    <div class="container-fluid">
+    <div class="container">
     <div class="row mb-2">
         <div class="col-sm-6">
         <h1 class="m-0">{{ $title ?? '' }}</h1>
@@ -19,14 +19,14 @@
 </div>
 <!-- /.content-header -->
 
-<div class="container-fluid mb-3 d-flex justify-content-end">
+<div class="container mb-3 d-flex justify-content-end">
     <div class="row">
         <div class="col-12">
             {{-- <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#importExcel">Impor <i
                 class="fa fa-file-import"></i></a>
             <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
             <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
-            <button class="btn btn-sm btn-primary" id="createNewItem">Tambah <i class="fa fa-plus"></i></button>
+            <button class="btn btn-sm bg-navy" id="createNewItem">Tambah <i class="fa fa-plus"></i></button>
             <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
         </div>
     </div>
@@ -34,14 +34,14 @@
 
 <div class="container">
     {{-- @include('components.alerts') --}}
-    <div class="card card-primary">
-        <div class="card-header">
+    <div class="card">
+        <div class="card-header bg-navy">
             <h3 class="card-title">Data Produk</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
             <table id="data-table" class="table table-sm table-bordered table-striped">
-                <thead>
+                <thead class="bg-navy">
                     <tr>
                         <th style="width: 1%">No.</th>
                         <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
-                        <input type="text" class="form-control form-control-sm mr-2" name="quantity" id="quantity" required>
+                        <input type="number" class="form-control form-control-sm mr-2" name="quantity" id="quantity" required>
                     </div>
                     <div class="form-group">
                         <label for="price">Harga</label>
@@ -229,10 +229,9 @@
                     $('#saveBtn').html("Simpan");
                     $('#product_id').val(data.id);
                     $('#name').val(data.name);
-                    $('#gender').val(data.gender);
-                    $('#email').val(data.email);
-                    $('#phone_number').val(data.phone_number);
-                    $('#address').val(data.address);
+                    $('#price').val(data.price);
+                    $('#quantity').val(data.quantity);
+                    $('#category_id').val(data.category_id);
                 })
             });
 
@@ -250,13 +249,14 @@
                         $('#saveBtn').html('Simpan ...');
                         $('#itemForm').trigger("reset");
                         $('#modal-md').modal('hide');
+                        toastr.success('Data berhasil disimpan  ');
                         table.draw();
                     },
                     error: function (data) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Data masih kosong!',
+                            text: 'Coba kembali isi data dengan benar!',
                         });
                     }
                 });
@@ -293,12 +293,12 @@
             }
 
             $(document).on('click','button#deleteAllBtn', function(){
-               var checkedItem = [];
-               $('input[name="checkbox"]:checked').each(function(){
+                var checkedItem = [];
+                $('input[name="checkbox"]:checked').each(function(){
                    checkedItem.push($(this).data('id'));
-               });
-               var url = '{{ route("products.deleteSelected") }}';
-               if(checkedItem.length > 0){
+                });
+                var url = '{{ route("products.deleteSelected") }}';
+                if(checkedItem.length > 0){
                     swal.fire({
                         title:'Apakah yakin?',
                         html:'Ingin menghapus <b>('+checkedItem.length+')</b> anggota?',
@@ -320,7 +320,7 @@
                             },'json');
                         }
                     })
-               }
+                }
             });
 
         });

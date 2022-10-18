@@ -21,8 +21,8 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-child-indent" data-widget="treeview" role="menu"
-                data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-child-indent" data-widget="treeview"
+                role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
                 <li class="nav-item menu-open">
@@ -64,6 +64,29 @@
                             Kategori Produks
                         </p>
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Transaksi
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="./index.html" class="nav-link active">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Penjualan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./index2.html" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Pembelian</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>

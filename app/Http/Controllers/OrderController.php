@@ -66,18 +66,21 @@ class OrderController extends Controller
         //     'category_id' => 'required',
         // ]);
 
-        Order::create([
+        $order = Order::create([
             'date' => request('date'),
             'order_number' => $nextInvoiceNumber,
-            'status' => request('status'),
+            'status' => request('status') ?? 'pending',
             'customer_id' => request('customer_id'),
         ]);
-        for ($i = 0; $i < count(request('product_id')); $i++) {
+        for ($i = 0; $i < count(request('product')); $i++) {
             OrderDetail::create([
-                'product_id' => request('product_id')[$i],
-                'category_id' => request('category_id')[$i],
+                'order_id' => $order->id,
+                'product_id' => request('product')[$i],
+                'quantity' => request('quantity')[$i],
+                'price' => request('price')[$i],
             ]);
         }
+
 
         return redirect()->route('sales.index');
     }

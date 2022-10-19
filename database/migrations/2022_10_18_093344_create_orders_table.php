@@ -15,6 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->date('date');
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('RESTRICT');
             $table->foreignId('supplier_id')->nullable();
             $table->string('order_number')->unique();

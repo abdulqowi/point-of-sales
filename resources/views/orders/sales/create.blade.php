@@ -77,7 +77,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" name="quantity]" class="form-control form-control-sm">
+                                    <input type="number" name="quantity[]" class="form-control form-control-sm">
                                 </td>
                                 <td>
                                     <input type="number" name="price[]" class="form-control form-control-sm">
@@ -165,41 +165,42 @@
     <script>
         $(document).ready(function(e) {
 
-            $('#formMultipleAdd').submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    beforeSend: function() {
-                        $('.btnSaveAll').attr('disabled', 'disabled');
-                        $('.btnSaveAll').html('<i class="fa fa-spin fa-spinner"></i>');
-                    },
-                    complete: function() {
-                        $('.btnSaveAll').removeAttr('disabled');
-                        $('.btnSaveAll').html('Simpan');
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                html: `${response.success}`,
-                            }).then((result) => {
-                                if (result.value) {
-                                    window.location.href = (
-                                        "{{ route('sales.index') }}")
-                                }
-                            })
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                    }
-                });
-                return false;
-            });
+            // $('#formMultipleAdd').submit(function(e) {
+            //     e.preventDefault();
+            //     $.ajax({
+            //         type: "POST",
+            //         url: $(this).attr('action'),
+            //         data: $(this).serialize(),
+            //         dataType: "json",
+            //         beforeSend: function() {
+            //             $('.btnSaveAll').attr('disabled', 'disabled');
+            //             $('.btnSaveAll').html('<i class="fa fa-spin fa-spinner"></i>');
+            //         },
+            //         complete: function() {
+            //             $('.btnSaveAll').removeAttr('disabled');
+            //             $('.btnSaveAll').html('Simpan');
+            //         },
+            //         success: function(response) {
+            //             if (response.success) {
+            //                 swal.fire({
+            //                     icon: 'success',
+            //                     title: 'Berhasil',
+            //                     html: `${response.success}`,
+            //                 }).then((result) => {
+            //                     if (result.value) {
+            //                         window.location.href = (
+            //                             "{{ route('sales.index') }}")
+            //                     }
+            //                 })
+            //             }
+            //         },
+            //         error: function(xhr, ajaxOptions, thrownError) {
+            //             // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            //             console.log(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            //         }
+            //     });
+            //     return false;
+            // });
 
             $('.btnAddForm').click(function(e) {
                 e.preventDefault();
@@ -215,7 +216,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="number" name="quantity]" class="form-control form-control-sm">
+                            <input type="number" name="quantity[]" class="form-control form-control-sm">
                         </td>
                         <td>
                             <input type="number" name="price[]" class="form-control form-control-sm">

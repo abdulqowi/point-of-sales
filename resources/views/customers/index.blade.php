@@ -36,7 +36,7 @@
     {{-- @include('components.alerts') --}}
     <div class="card">
         <div class="card-header bg-navy">
-            <h3 class="card-title">List Kategori</h3>
+            <h3 class="card-title">List Pelanggan</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
@@ -46,6 +46,7 @@
                         <th style="width: 1%">No.</th>
                         <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
                         <th>Nama</th>
+                        <th>No. HP</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -71,11 +72,14 @@
             </div>
             <form method="post" id="itemForm" name="itemForm">
                 @csrf
-                <input type="hidden" name="category_id" id="category_id">
+                <input type="hidden" name="customer_id" id="customer_id">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Nama</label>
                         <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
+                        <label for="name">No.hp</label>
+                        <input type="text" class="form-control form-control-sm mr-2" name="phone" id="phone" required>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -105,7 +109,7 @@
                     <li class="list-group-item">Nama : <i id="nameMember"></i></li>
                     <li class="list-group-item">Jenis Kelamin : <i id="genderMember"></i></li>
                     <li class="list-group-item">Email : <i id="emailMember"></i></li>
-                    <li class="list-group-item">No HP : <i id="category"></i></li>
+                    <li class="list-group-item">No HP : <i id="customer"></i></li>
                     <li class="list-group-item">Alamat : <i id="addressMember"></i></li>
                     <li class="list-group-item">Status : <i id="statusMember"></i></li>
                     <li class="list-group-item">Jumlah Pinjaman : <i id="totalLoan"></i></li>
@@ -156,11 +160,12 @@
                 serverSide: true,
                 responsive: true,
 
-                ajax: "{{ route('categories.index') }}",
+                ajax: "{{ route('customers.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
                     {data: 'name', name: 'name'},
+                    {data: 'phone', name: 'phone'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){
@@ -177,35 +182,36 @@
                 $('#saveBtn').html("Simpan");
                 $('#item_id').val('');
                 $('#itemForm').trigger("reset");
-                $('#modal-title').html("Tambah Kategori");
+                $('#modal-title').html("Tambah Pelanggan");
                 $('#modal-md').modal('show');
             });
 
             // $('body').on('click', '#showProduct', function() {
             //     var product_id = $(this).data('id');
-            //     $.get("{{ route('categories.index') }}" + '/' + product_id, function(data) {
+            //     $.get("{{ route('customers.index') }}" + '/' + product_id, function(data) {
             //         $('#modalProduct').modal('show');
             //         $('#product_id').val(data.id);
             //         // $('#imageProduct').attr('src', '/storage/' + data.image);
             //         $('#name').html(data.name);
             //         $('#price').html(data.gender);
             //         $('#quantity').html(data.quantity);
-            //         $('#category').html(data.phone_number);
+            //         $('#customer').html(data.phone_number);
             //     })
             // });
 
-            $('body').on('click', '#editCategory', function () {
-                var category_id = $(this).data('id');
-                $.get("{{ route('categories.index') }}" +'/' + category_id +'/edit', function (data) {
+            $('body').on('click', '#editCustomer', function () {
+                var customer_id = $(this).data('id');
+                $.get("{{ route('customers.index') }}" +'/' + customer_id +'/edit', function (data) {
                     $('#modal-md').modal('show');
                     setTimeout(function () {
                         $('#name').focus();
                     }, 500);
-                    $('#modal-title').html("Edit Category");
+                    $('#modal-title').html("Edit Customer");
                     $('#saveBtn').removeAttr('disabled');
                     $('#saveBtn').html("Simpan");
-                    $('#category_id').val(data.id);
+                    $('#customer_id').val(data.id);
                     $('#name').val(data.name);
+                    $('#phone').val(data.phone);
                 })
             });
 
@@ -214,7 +220,7 @@
                 var formData = new FormData($('#itemForm')[0]);
                 $.ajax({
                     data: formData,
-                    url: "{{ route('categories.store') }}",
+                    url: "{{ route('customers.store') }}",
                     contentType : false,
                     processData : false,
                     type: "POST",
@@ -271,7 +277,7 @@
                 $('input[name="checkbox"]:checked').each(function(){
                    checkedItem.push($(this).data('id'));
                 });
-                var url = '{{ route("categories.deleteSelected") }}';
+                var url = '{{ route("customers.deleteSelected") }}';
                 if(checkedItem.length > 0){
                     swal.fire({
                         title:'Apakah yakin?',

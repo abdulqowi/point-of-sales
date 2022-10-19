@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -27,5 +28,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::resource('products', ProductController::class);
 Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
-Route::resource('category', CategoryController::class);
+Route::resource('categories', CategoryController::class);
 Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');

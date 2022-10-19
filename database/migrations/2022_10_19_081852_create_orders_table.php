@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->date('date');
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('RESTRICT');
-            $table->foreignId('supplier_id')->nullable();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('RESTRICT');
             $table->string('order_number')->unique();
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();

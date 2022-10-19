@@ -43,6 +43,41 @@ class OrderController extends Controller
         return view('orders.sales.index');
     }
 
+    public function purchases()
+    {
+        if (request()->ajax()) {
+            $orders = Order::latest()->get();
+            return DataTables::of($orders)
+                ->addIndexColumn()
+                ->addColumn('checkbox', function ($row) {
+                    return '<input type="checkbox" name="checkbox" id="check" class="checkbox" data-id="' . $row->id . '">';
+                })
+                ->editColumn('supplier_id', function (Order $order) {
+                    return $order->supplier->name;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn =
+                        '<div class="btn-group">
+                            <a class="badge bg-navy dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showProduct" class="btn btn-sm btn-primary">View</a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Edit</a>
+                                <form action=" ' . route('products.destroy', $row->id) . '" method="POST">
+                                    <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
+                                ' . csrf_field() . '
+                                ' . method_field('DELETE') . '
+                                </form>
+                            </div>
+                        </div>';
+                    return $btn;
+                })
+                ->rawColumns(['checkbox', 'action'])
+                ->make(true);
+        }
+        return view('orders.purchases.index');
+    }
+
     public function createSales()
     {
         return view('orders.sales.create', [

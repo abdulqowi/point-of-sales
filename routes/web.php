@@ -33,6 +33,11 @@ Route::middleware('auth')->group(function () {
     Route::post('orders/sales', [OrderController::class, 'storeSales'])->name('sales.store');
     Route::delete('orders/sales/{id}', [OrderController::class, 'destroySales'])->name('sales.destroy');
 
+    Route::get('orders/purchases', [OrderController::class, 'purchases'])->name('purchases.index');
+    Route::get('orders/purchases/create', [OrderController::class, 'createPurchases'])->name('purchases.create');
+    Route::post('orders/purchases', [OrderController::class, 'storepurchases'])->name('purchases.store');
+    Route::delete('orders/purchases/{id}', [OrderController::class, 'destroyPurchases'])->name('purchases.destroy');
+
 });
 Route::resource('products', ProductController::class);
 Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');

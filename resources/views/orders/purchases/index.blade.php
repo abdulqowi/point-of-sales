@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Data Transaksi'])
+@extends('layouts.app', ['title' => 'Data Pembelian'])
 
 @section('content')
 
@@ -26,7 +26,7 @@
                 class="fa fa-file-import"></i></a>
             <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
             <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
-            <button class="btn btn-sm bg-navy" id="createNewItem">Tambah <i class="fa fa-plus"></i></button>
+            <a class="btn btn-sm bg-navy" href="{{ route('purchases.create') }}">Tambah <i class="fa fa-plus"></i></a>
             <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
         </div>
     </div>
@@ -36,7 +36,7 @@
     {{-- @include('components.alerts') --}}
     <div class="card">
         <div class="card-header bg-navy">
-            <h3 class="card-title">Data Produk</h3>
+            <h3 class="card-title">Data Pembelian</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
@@ -47,7 +47,7 @@
                         <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
                         <th>Kode</th>
                         <th>Status</th>
-                        <th>Pelanggan</th>
+                        {{-- <th>Pemasok</th> --}}
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -103,7 +103,6 @@
 
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/toastr/toastr.min.css">
-    <script src="{{ asset('assets') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 @endpush
 @push('scripts')
 
@@ -128,13 +127,13 @@
                 serverSide: true,
                 responsive: true,
 
-                ajax: "{{ route('orders.index') }}",
+                ajax: "{{ route('purchases.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
                     {data: 'order_number', name: 'order_number'},
                     {data: 'status', name: 'status'},
-                    {data: 'customer_id', name: 'customer.name'},
+                    // {data: 'supplier_id', name: 'supplier.name'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){

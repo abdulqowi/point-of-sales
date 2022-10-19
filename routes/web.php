@@ -45,4 +45,4 @@ Route::post('categories/delete-selected', [CategoryController::class, 'deleteSel
 Route::resource('customers', CustomerController::class);
 Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');
 Route::resource('suppliers', SupplierController::class);
-Route::post('suppliers', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');
+Route::post('suppliers/delete-selected', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');

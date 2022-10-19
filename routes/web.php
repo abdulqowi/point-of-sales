@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\{OrderController, ProductController};
 
 /*
 |--------------------------------------------------------------------------
@@ -15,15 +15,22 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('login', [LoginController::class, 'showLoginForm']);
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('logout',  [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('products', ProductController::class);
-Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    Route::resource('products', ProductController::class);
+    Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
+
+    Route::get('orders/sales', [OrderController::class, 'sales'])->name('sales.index');
+    Route::get('orders/sales/create', [OrderController::class, 'createSales'])->name('sales.create');
+    Route::post('orders/sales', [OrderController::class, 'storeSales'])->name('sales.store');
+    Route::delete('orders/sales/{id}', [OrderController::class, 'destroySales'])->name('sales.destroy');
+
+});

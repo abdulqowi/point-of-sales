@@ -21,7 +21,7 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-child-indent" data-widget="treeview"
+            <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview"
                 role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
        with font-awesome or any other icon font library -->
@@ -75,7 +75,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link active">
+                            <a href="{{ route('sales.index') }}" class="nav-link active">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Penjualan</p>
                             </a>
@@ -87,6 +87,18 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                    <i class="nav-icon fas fa-sign-out-alt" style="color: rgb(184, 0, 0);"></i>
+                    <p>
+                        <span>Keluar</span>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </p>
+                    </a>
                 </li>
             </ul>
         </nav>

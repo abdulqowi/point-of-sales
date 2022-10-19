@@ -1,4 +1,4 @@
-@extends('layouts.app', compact('title'))
+@extends('layouts.app', ['title' => 'Data Penjualan'])
 
 @section('content')
 
@@ -26,7 +26,7 @@
                 class="fa fa-file-import"></i></a>
             <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
             <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
-            <button class="btn btn-sm bg-navy" id="createNewItem">Tambah <i class="fa fa-plus"></i></button>
+            <a class="btn btn-sm bg-navy" href="{{ route('sales.create') }}">Tambah <i class="fa fa-plus"></i></a>
             <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
         </div>
     </div>
@@ -36,7 +36,7 @@
     {{-- @include('components.alerts') --}}
     <div class="card">
         <div class="card-header bg-navy">
-            <h3 class="card-title">Data Produk</h3>
+            <h3 class="card-title">Data Penjualan</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
@@ -45,10 +45,9 @@
                     <tr>
                         <th style="width: 1%">No.</th>
                         <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
-                        <th>Nama</th>
-                        <th>Harga</th>
-                        <th>Kuantitas</th>
-                        <th>Kategori</th>
+                        <th>Kode</th>
+                        <th>Status</th>
+                        <th>Pelanggan</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -61,53 +60,6 @@
     </div>
     <!-- /.card -->
 </div>
-
-<!-- MODAL -->
-<div class="modal fade" id="modal-md">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-title"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" id="itemForm" name="itemForm">
-                @csrf
-                <input type="hidden" name="product_id" id="product_id">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Nama</label>
-                        <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category_id">Kategori <span class="text-danger">*</span></label>
-                        <select name="category_id" id="category_id" class="form-control form-control-sm mr-2">
-                            <option selected disabled>Pilih Kategori</option>
-                            @foreach ($categories as $data)
-                                <option value="{{ $data->id }}">{{ $data->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="quantity" id="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Harga</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="price" id="price" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="saveBtn" value="create">Save</button>
-                </div>
-            </form>
-        </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
 
 <!-- MODAL SHOW BOOK -->
 {{-- <div class="modal fade show" id="modalProduct" aria-modal="true" role="dialog">
@@ -176,14 +128,13 @@
                 serverSide: true,
                 responsive: true,
 
-                ajax: "{{ route('products.index') }}",
+                ajax: "{{ route('sales.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
-                    {data: 'name', name: 'name'},
-                    {data: 'price', name: 'price'},
-                    {data: 'quantity', name: 'quantity'},
-                    {data: 'category_id', name: 'category.name'},
+                    {data: 'order_number', name: 'order_number'},
+                    {data: 'status', name: 'status'},
+                    {data: 'customer_id', name: 'customer.name'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){
@@ -327,4 +278,3 @@
     </script>
 
 @endpush
-

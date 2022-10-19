@@ -86,28 +86,28 @@ class ProductController extends Controller
         return response()->json(['code' => 1, 'msg' => 'Data product berhasil dihapus']);
     }
 
-    public function import()
-    {
-        request()->validate([
-            'file' => 'required|mimes:csv,xls,xlsx'
-        ]);
+    // public function import()
+    // {
+    //     request()->validate([
+    //         'file' => 'required|mimes:csv,xls,xlsx'
+    //     ]);
 
-        Excel::import(new MembersImport, request()->file('file'));
+    //     Excel::import(new MembersImport, request()->file('file'));
 
-        toast('Data anggota berhasil diimport!', 'success');
-        return redirect()->route('members.index');
-    }
+    //     toast('Data anggota berhasil diimport!', 'success');
+    //     return redirect()->route('members.index');
+    // }
 
-    public function export()
-    {
-        return Excel::download(new MembersExport, time() . 'members.xlsx');
-    }
+    // public function export()
+    // {
+    //     return Excel::download(new MembersExport, time() . 'members.xlsx');
+    // }
 
-    public function printPDF()
-    {
-        $members = Member::all();
-        // $pdf = app('dompdf.wrapper');
-        $pdf = PDF::loadView('members.pdf', compact('members'))->setPaper('a4', 'landscape');
-        return $pdf->stream();
-    }
+    // public function printPDF()
+    // {
+    //     $members = Member::all();
+    //     // $pdf = app('dompdf.wrapper');
+    //     $pdf = PDF::loadView('members.pdf', compact('members'))->setPaper('a4', 'landscape');
+    //     return $pdf->stream();
+    // }
 }

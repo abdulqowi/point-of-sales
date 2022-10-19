@@ -20,7 +20,7 @@ class CustomerSeeder extends Seeder
         ]);
 
         Customer::create([
-            'name' => 'Qowi Bangsat',
+            'name' => 'Qowi',
             'phone' => '082117088124',
         ]);
     }

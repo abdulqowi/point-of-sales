@@ -55,7 +55,7 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2014-{{ date('Y') }} <a href="https://ikhsanheriyawan2404.github.io.io">Made by LOVE Qowi & Ikhsan</a>.</strong>
+            <strong>Copyright &copy; 2014-{{ date('Y') }} <a href="https://ikhsanheriyawan2404.github.io.io">Created by Qowi & Ikhsan</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 9.9.9

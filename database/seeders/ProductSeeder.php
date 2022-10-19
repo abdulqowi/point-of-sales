@@ -21,9 +21,7 @@ class ProductSeeder extends Seeder
                 'name' => $faker->name,
                 'price' => rand(1000,1220000),
                 'quantity' => rand(0,100),
-                'category_id' => rand(1,13),
-
-                
+                'category_id' => rand(1,13),                
             ]);
     }
     }

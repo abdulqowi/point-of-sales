@@ -34,3 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('orders/sales/{id}', [OrderController::class, 'destroySales'])->name('sales.destroy');
 
 });
+Route::resource('products', ProductController::class);
+Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
+Route::resource('categories', CategoryController::class);
+Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');
+Route::resource('customers', CustomerController::class);
+Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');

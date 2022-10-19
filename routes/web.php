@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Auth\LoginController;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 use App\Http\Controllers\{OrderController, ProductController};
 
 /*
@@ -40,3 +44,5 @@ Route::resource('categories', CategoryController::class);
 Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');
 Route::resource('customers', CustomerController::class);
 Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');
+Route::resource('suppliers', SupplierController::class);
+Route::post('suppliers', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');

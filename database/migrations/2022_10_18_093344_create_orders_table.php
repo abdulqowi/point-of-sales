@@ -15,11 +15,10 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('user_id')->index();
-            $table->foreignId('customer_id')->index();
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('RESTRICT');
+            $table->foreignId('supplier_id')->nullable();
             $table->string('order_number')->unique();
-            $table->string('status')->default('pending');
-            $table->foreignId('suppliers');
+            $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();
         });
     }

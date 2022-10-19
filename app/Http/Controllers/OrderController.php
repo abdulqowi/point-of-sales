@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Order, Product, Customer};
+use App\Models\OrderDetail;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\{Order, Product, Customer};
 
 class OrderController extends Controller
 {
@@ -52,29 +53,32 @@ class OrderController extends Controller
 
     public function storeSales()
     {
-        if ($this->request->isAJAX()) {
-            if ($this->validate(request(), [
-                'name' => 'required',
-                'category_id' => 'required',
-            ]))
-            {
-                $name = $this->request->getPost('name');
-                $category_id = $this->request->getPost('category_id');
-
-                $total = count($name);
-                for ($i = 0; $i < $total; $i++) {
-                    $this->item->insert([
-                        'name' => $name[$i],
-                        'category_id' => $category_id[$i],
-                    ]);
-                }
-
-                $message = [
-                    'success' => $total . ' Data berhasil disimpan'
-                ];
-
-                return json_encode($message);
-            }
+        $record = Order::latest()->first();
+        if (isset($record)){
+            $expNum = explode('-', $record->order_number);
+            $nextInvoiceNumber = $expNum[0].'-'. $expNum[1] .'-'. ($expNum[2]+'1');
+        } else {
+            $nextInvoiceNumber = 'INV-' . date('dmy') .'-10001';
         }
+
+        // $this->validate(request(), [
+        //     'name' => 'required',
+        //     'category_id' => 'required',
+        // ]);
+
+        Order::create([
+            'date' => request('date'),
+            'order_number' => $nextInvoiceNumber,
+            'status' => request('status'),
+            'customer_id' => request('customer_id'),
+        ]);
+        for ($i = 0; $i < count(request('product_id')); $i++) {
+            OrderDetail::create([
+                'product_id' => request('product_id')[$i],
+                'category_id' => request('category_id')[$i],
+            ]);
+        }
+
+        return redirect()->route('sales.index');
     }
 }

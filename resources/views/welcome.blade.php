@@ -27,7 +27,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>150</h3>
+                        <h3>Rp. {{ number_format($orders->whereNotNull('supplier_id')->where('status', 'paid')->sum('total_price')) }}</h3>
 
                         <p>Pengeluaran</p>
                     </div>

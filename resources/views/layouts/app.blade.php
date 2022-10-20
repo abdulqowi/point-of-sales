@@ -31,7 +31,7 @@
     @stack('styles')
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed {{ request()->routeIs('purchases.create') || request()->routeIs('sales.create') ? 'sidebar-collapse' : ''}}">
     <div class="wrapper">
 
         <!-- Preloader -->

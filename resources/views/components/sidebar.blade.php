@@ -35,7 +35,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-box"></i>
                         <p>
                             Produk
                         </p>
@@ -43,7 +43,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('customers.index') }}" class="nav-link {{ request()->routeIs('customers.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
                             Pelanggan
                         </p>
@@ -51,7 +51,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-truck"></i>
                         <p>
                             Pemasok
                         </p>
@@ -59,7 +59,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('categories.index') }}" class="nav-link {{ request()->routeIs('categories.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-boxes"></i>
                         <p>
                             Kategori Produk
                         </p>
@@ -67,7 +67,7 @@
                 </li>
                 <li class="nav-item  {{ request()->routeIs('sales.index') || request()->routeIs('purchases.index') ? 'menu-open' : ''}}">
                     <a href="#" class="nav-link {{ request()->routeIs('sales.index') || request()->routeIs('purchases.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-money-bill-alt"></i>
                         <p>
                             Transaksi
                             <i class="right fas fa-angle-left"></i>
@@ -76,13 +76,13 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('sales.index') }}" class="nav-link {{ request()->routeIs('sales.index') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-hand-holding-usd nav-icon"></i>
                                 <p>Penjualan</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('purchases.index') }}" class="nav-link {{ request()->routeIs('purchases   .index') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-money-bill-wave nav-icon"></i>
                                 <p>Pembelian</p>
                             </a>
                         </li>

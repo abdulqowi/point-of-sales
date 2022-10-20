@@ -8,7 +8,11 @@ use App\Models\Supplier;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use LaravelDaily\Invoices\Classes\Buyer;
+use LaravelDaily\Invoices\Classes\Party;
 use Yajra\DataTables\Facades\DataTables;
+use LaravelDaily\Invoices\Facades\Invoice;
+use LaravelDaily\Invoices\Classes\InvoiceItem;
 
 class OrderPurchaseController extends Controller
 {
@@ -28,7 +32,7 @@ class OrderPurchaseController extends Controller
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showPurchase" class="btn btn-sm btn-primary">View</a>
-                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Print</a>
+                                <a class="dropdown-item" href="' . route('purchases.print',$row->id) . '" class="btn btn-primary btn-sm" id="editProduct">Print</a>
                                 <form action=" ' . route('purchases.destroy', $row->id) . '" method="POST">
                                     <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
                                 ' . csrf_field() . '
@@ -123,6 +127,39 @@ class OrderPurchaseController extends Controller
 
     public function printPurchases($id)
     {
+        $orders = Order::with('supplier', 'order_details')->find($id);
+        $supplier = new Buyer([
+            'name' => $orders->supplier->name,
+            'custom_fields' => [
+                'nomor telepon' => $orders->supplier->phone,
+            ],
+        ]);
+        $client = new Party([
+            'name'          => 'Toko dulQowi Jaya Baru',
+            'phone'         => '(520) 318-9486',
+            'custom_fields' => [
+                'note'        => 'Terima Kasih Sudah Berbelanja Di Kami',
+                'address'     => 'Desa Kempek Blok 3 Penangisan Gempol',
+                'business id' => '365#GG',
+            ],
+        ]);
+        $item = [];
 
+        foreach ($orders->order_details as $value) {
+            $item[] = (new InvoiceItem())->title($value->product_name)->pricePerUnit($value->price)->quantity($value->quantity);
+        }
+
+        $invoice = Invoice::make('Struk')
+            ->seller($client)
+            ->series(substr($orders->order_number, 0, -6))
+            ->status($orders->status)
+            ->buyer($supplier)
+            ->currencySymbol('Rp. ')
+            ->currencyFormat('{SYMBOL}{VALUE}')
+            ->currencyThousandsSeparator('.')
+            ->filename($client->name . ' ' . $supplier->name)
+            ->addItems($item);
+
+        return $invoice->stream();
     }
 }

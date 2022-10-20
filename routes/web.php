@@ -35,7 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('orders/sales/create', [OrderSaleController::class, 'createSales'])->name('sales.create');
     Route::post('orders/sales', [OrderSaleController::class, 'storeSales'])->name('sales.store');
     Route::delete('orders/sales/{id}', [OrderSaleController::class, 'destroySales'])->name('sales.destroy');
-    Route::get('orders/sales/{id}', [OrderPurchaseController::class, 'showSales'])->name('sales.show');
+    Route::get('orders/sales/{id}', [OrderSaleController::class, 'showSales'])->name('sales.show');
+    Route::get('orders/sales/{id}/print', [OrderSaleController::class, 'printSales'])->name('sales.print');
 
     // Order Pembelian
     Route::get('orders/purchases', [OrderPurchaseController::class, 'purchases'])->name('purchases.index');
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('orders/purchases', [OrderPurchaseController::class, 'storepurchases'])->name('purchases.store');
     Route::delete('orders/purchases/{id}', [OrderPurchaseController::class, 'destroyPurchases'])->name('purchases.destroy');
     Route::get('orders/purchases/{id}', [OrderPurchaseController::class, 'showPurchases'])->name('purchases.show');
+    Route::get('orders/purchases/{id}/print', [OrderPurchaseController::class, 'printPurchases'])->name('purchases.print');
 
 });
 Route::resource('products', ProductController::class);

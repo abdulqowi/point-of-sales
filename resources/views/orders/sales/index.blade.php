@@ -7,7 +7,7 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">{{ $title ?? '' }}</h1>
+        <h1 class="m-0">{{ $title ?? 'Data Penjualan' }}</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -19,6 +19,43 @@
 </div>
 <!-- /.content-header -->
 
+<div class="container-fluid">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-6 col-6">
+            <!-- small box -->
+            <div class="small-box bg-navy">
+                <div class="inner">
+                    <h3>Rp. {{ number_format($orders->where('status', 'paid')->sum('total_price')) }}</h3>
+
+                    <p>Penjualan Sudah Dibayar</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-6 col-6">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>Rp. {{ number_format($orders->where('status', 'pending')->sum('total_price')) }}</h3>
+
+                    <p>Penjualan Belum Dibayar</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+</div><!-- /.container-fluid -->
+
 <div class="container-fluid mb-3 d-flex justify-content-end">
     <div class="row">
         <div class="col-12">
@@ -26,8 +63,7 @@
                 class="fa fa-file-import"></i></a>
             <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
             <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
-            <a class="btn btn-sm bg-navy" href="{{ route('sales.create') }}">Tambah <i class="fa fa-plus"></i></a>
-            <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
+            <a class="btn btn-sm bg-navy" href="{{ route('sales.create') }}">Tambah Penjualan <i class="fa fa-plus"></i></a>
         </div>
     </div>
 </div>

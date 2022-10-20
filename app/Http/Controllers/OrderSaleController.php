@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\{Order, Product, Customer};
 
-class OrderController extends Controller
+class OrderSaleController extends Controller
 {
     public function sales()
     {
@@ -41,7 +41,9 @@ class OrderController extends Controller
                 ->rawColumns(['checkbox', 'action'])
                 ->make(true);
         }
-        return view('orders.sales.index');
+        return view('orders.sales.index', [
+            'orders' => Order::whereNotNull('customer_id')->get(),
+        ]);
     }
 
     public function createSales()

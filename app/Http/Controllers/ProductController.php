@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use App\Models\{Category, Product};
+use App\Models\{Category, Order, Product};
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ProductRequest;
 use Yajra\DataTables\Facades\DataTables;

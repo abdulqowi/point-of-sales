@@ -20,8 +20,8 @@ class ProductSeeder extends Seeder
             Product::create([
                 'name' => $faker->name,
                 'price' => rand(1000,1220000),
-                'quantity' => rand(0,100),
-                'category_id' => rand(1,13),                
+                'quantity' => 0,
+                'category_id' => rand(1,13),
             ]);
     }
     }

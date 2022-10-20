@@ -44,7 +44,6 @@
                 <thead class="bg-navy">
                     <tr>
                         <th style="width: 1%">No.</th>
-                        <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
                         <th>Kode</th>
                         <th>Status</th>
                         {{-- <th>Pemasok</th> --}}
@@ -121,7 +120,6 @@
         });
 
         $(function () {
-            bsCustomFileInput.init();
             let table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -130,7 +128,6 @@
                 ajax: "{{ route('purchases.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
-                    {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
                     {data: 'order_number', name: 'order_number'},
                     {data: 'status', name: 'status'},
                     // {data: 'supplier_id', name: 'supplier.name'},

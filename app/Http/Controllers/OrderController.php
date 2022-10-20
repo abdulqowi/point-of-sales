@@ -103,7 +103,7 @@ class OrderController extends Controller
                             <a class="badge bg-navy dropdown-toggle dropdown-icon" data-toggle="dropdown">
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showProduct" class="btn btn-sm btn-primary">View</a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showPurchase" class="btn btn-sm btn-primary">View</a>
                                 <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Print</a>
                                 <form action=" ' . route('purchases.destroy', $row->id) . '" method="POST">
                                     <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
@@ -132,7 +132,7 @@ class OrderController extends Controller
         return view('orders.purchases.create', [
             'products' => Product::all(),
             'suppliers' => Supplier::all(),
-            'order_number' => $nextInvoiceNumber,
+            'orderNumber' => $nextInvoiceNumber,
         ]);
     }
 
@@ -146,6 +146,7 @@ class OrderController extends Controller
             } else {
                 $nextInvoiceNumber = 'INV-' . date('dmy') . '-10001';
             }
+
             DB::transaction(function () use ($nextInvoiceNumber) {
                 $order = Order::create([
                     'date' => request('date'),
@@ -186,5 +187,25 @@ class OrderController extends Controller
         }
         $order->delete();
         return redirect()->back();
+    }
+
+    public function showPurchases($id)
+    {
+        // $order = OrderDetail::get();
+        $order = Order::with('order_details')->find($id);
+
+        // get Total nominal orders
+        // $order = DB::table('order_details')
+        //     ->select(DB::raw('SUM(price * quantity)'))
+        //     ->where('order_id', $id)
+        //     ->get();
+
+        // $order = Order::with('order_details')->find($id);
+        return response()->json($order);
+    }
+
+    public function printPurchases($id)
+    {
+
     }
 }

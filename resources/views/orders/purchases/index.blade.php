@@ -22,10 +22,6 @@
 <div class="container-fluid mb-3 d-flex justify-content-end">
     <div class="row">
         <div class="col-12">
-            {{-- <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#importExcel">Impor <i
-                class="fa fa-file-import"></i></a>
-            <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
-            <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
             <a class="btn btn-sm bg-navy" href="{{ route('purchases.create') }}">Tambah <i class="fa fa-plus"></i></a>
             <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
         </div>
@@ -33,7 +29,6 @@
 </div>
 
 <div class="container-fluid">
-    {{-- @include('components.alerts') --}}
     <div class="card">
         <div class="card-header bg-navy">
             <h3 class="card-title">Data Pembelian</h3>
@@ -45,8 +40,9 @@
                     <tr>
                         <th style="width: 1%">No.</th>
                         <th>Kode</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
-                        {{-- <th>Pemasok</th> --}}
+                        <th>Pemasok</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -61,27 +57,42 @@
 </div>
 
 <!-- MODAL SHOW BOOK -->
-{{-- <div class="modal fade show" id="modalProduct" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade show" id="modalPurchase" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Detail Buku</h4>
+                <h4 class="modal-title">Detail Order</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><img src="" id="imageMember" alt="default.jpg" class="img-fluid" width="50%"></li>
-                    <li class="list-group-item">Nama : <i id="nameMember"></i></li>
-                    <li class="list-group-item">Jenis Kelamin : <i id="genderMember"></i></li>
-                    <li class="list-group-item">Email : <i id="emailMember"></i></li>
-                    <li class="list-group-item">No HP : <i id="category"></i></li>
-                    <li class="list-group-item">Alamat : <i id="addressMember"></i></li>
-                    <li class="list-group-item">Status : <i id="statusMember"></i></li>
-                    <li class="list-group-item">Jumlah Pinjaman : <i id="totalLoan"></i></li>
-                    <li class="list-group-item">Jumlah Denda : <i id=""></i></li>
-                </ul>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Kode : <i id="orderNumber"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="date"></i></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Status : <i id="status"></i></li>
+                            <li class="list-group-item">Total : <i id="total"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <table class="table table-sm" id="table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>quantity</th>
+                            <th>Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal">
+
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -90,7 +101,7 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-</div> --}}
+</div>
 
 @endsection
 
@@ -129,8 +140,9 @@
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'order_number', name: 'order_number'},
+                    {data: 'date', name: 'date'},
                     {data: 'status', name: 'status'},
-                    // {data: 'supplier_id', name: 'supplier.name'},
+                    {data: 'supplier_id', name: 'supplier.name'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){
@@ -151,18 +163,26 @@
                 $('#modal-md').modal('show');
             });
 
-            // $('body').on('click', '#showProduct', function() {
-            //     var product_id = $(this).data('id');
-            //     $.get("{{ route('products.index') }}" + '/' + product_id, function(data) {
-            //         $('#modalProduct').modal('show');
-            //         $('#product_id').val(data.id);
-            //         // $('#imageProduct').attr('src', '/storage/' + data.image);
-            //         $('#name').html(data.name);
-            //         $('#price').html(data.gender);
-            //         $('#quantity').html(data.quantity);
-            //         $('#category').html(data.phone_number);
-            //     })
-            // });
+            $('body').on('click', '#showPurchase', function() {
+                var purchase_id = $(this).data('id');
+                $.get("{{ route('purchases.index') }}" + '/' + purchase_id, function(data) {
+                    console.log(data.products);
+                    $('#modalPurchase').modal('show');
+                    $('#product_id').val(data.id);
+                    $('#date').html(data.date);
+                    $('#orderNumber').html(data.order_number);
+                    $('#status').html(data.status);
+                    $('#total').html(data.total_price);
+                    $.each(data.order_details, function (key, value) {
+                        $('tbody#modal').append(`<tr class="tr">
+                            <td>${value.product_name}</td>
+                            <td>${value.quantity}</td>
+                            <td>${value.price}</td>
+                        </tr>`);
+                    })
+                })
+                $('tbody.tr').remove();
+            });
 
             $('body').on('click', '#editProduct', function () {
                 var product_id = $(this).data('id');

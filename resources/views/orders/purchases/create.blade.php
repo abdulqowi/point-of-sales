@@ -87,39 +87,20 @@
 
                         </tbody>
                     </table>
+                    <hr>
                     <div class="row">
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
                             <p class="lead">
-                                <?php
-                                $expNum = explode('-', $order_number);
-                                $nextInvoiceNumber = $expNum[0] . '-' . $expNum[1] . '-' . ($expNum[2] + '1');
-                                echo $nextInvoiceNumber;
-                                ?>
+                                Kode Invoice : {{ $orderNumber }}
                             </p>
 
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th style="width:50%">Subtotal:</th>
+                                            <th style="width:50%">Total : </th>
                                             <td id="subtotal"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total</th>
-                                            <td id="total"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Bayar</th>
-                                            <td>
-                                                <input type="text" id="rupiah" class="form-control form-control-sm">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Kembalian</th>
-                                            <td>
-                                                <input type="number" id="charge" disabled class="form-control form-control-sm">
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -219,7 +200,7 @@
                             <input type="number" name="quantity[]" id="quantity" class="form-control form-control-sm">
                         </td>
                         <td>
-                            <input type="text" name="price[]" class="form-control form-control-sm" value=${data.price}>
+                            <input type="text" name="price[]" class="form-control form-control-sm" value=${data.purchase_price}>
                         </td>
                         <td>
                             <input type="number" name="total_price[]" class="form-control form-control-sm" disabled>
@@ -241,30 +222,6 @@
                 e.preventDefault();
                 $(this).parents('tr').remove();
             });
-
-            var rupiah = document.getElementById("price");
-            rupiah.addEventListener("keyup", function(e) {
-            // tambahkan 'Rp.' pada saat form di ketik
-            // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-            rupiah.value = formatRupiah(this.value, "Rp. ");
-            });
-
-            function formatRupiah(angka, prefix){
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split   		= number_string.split(','),
-                sisa     		= split[0].length % 3,
-                rupiah     		= split[0].substr(0, sisa),
-                ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if(ribuan){
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
         });
 
     </script>

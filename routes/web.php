@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('orders/purchases/create', [OrderController::class, 'createPurchases'])->name('purchases.create');
     Route::post('orders/purchases', [OrderController::class, 'storepurchases'])->name('purchases.store');
     Route::delete('orders/purchases/{id}', [OrderController::class, 'destroyPurchases'])->name('purchases.destroy');
+    Route::get('orders/purchases/{id}', [OrderController::class, 'showPurchases'])->name('purchases.show');
 
 });
 Route::resource('products', ProductController::class);

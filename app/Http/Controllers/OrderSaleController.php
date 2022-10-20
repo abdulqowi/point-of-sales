@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Supplier, OrderDetail};
 use Illuminate\Support\Facades\DB;
+use LaravelDaily\Invoices\Invoice;
+use LaravelDaily\Invoices\Classes\Buyer;
+use LaravelDaily\Invoices\Classes\Party;
 use Yajra\DataTables\Facades\DataTables;
-use App\Models\{Order, Product, Customer};
+use LaravelDaily\Invoices\Classes\InvoiceItem;
+use App\Models\{Supplier, OrderDetail, Order, Product, Customer};
 
 class OrderSaleController extends Controller
 {
@@ -25,7 +28,7 @@ class OrderSaleController extends Controller
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showSales" class="btn btn-sm btn-primary">View</a>
-                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Print</a>
+                                <a class="dropdown-item" href="' . route('sales.print',$row->id) . '" class="btn btn-primary btn-sm">Print</a>
                                 <form action=" ' . route('products.destroy', $row->id) . '" method="POST">
                                     <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
                                 ' . csrf_field() . '
@@ -97,8 +100,6 @@ class OrderSaleController extends Controller
 
             return response()->json($message);
         }
-
-
     }
 
     public function destroySales($id)
@@ -118,5 +119,43 @@ class OrderSaleController extends Controller
     {
         $order = Order::with('order_details')->find($id);
         return response()->json($order);
+    }
+
+    public function printSales($id)
+    {
+        $orders = Order::with('customer', 'order_details')->find($id);
+        $customer = new Buyer([
+            'name' => $orders->customer->name,
+            'custom_fields' => [
+                'nomor telepon' => $orders->customer->phone,
+            ],
+        ]);
+        $client = new Party([
+            'name'          => 'Toko dulQowi Jaya Baru',
+            'phone'         => '(520) 318-9486',
+            'custom_fields' => [
+                'note'        => 'Terima Kasih Sudah Berbelanja Di Kami',
+                'address'     => 'Desa Kempek Blok 3 Penangisan Gempol',
+                'business id' => '365#GG',
+            ],
+        ]);
+        $item = [];
+
+        foreach ($orders->order_details as $value) {
+            $item[] = (new InvoiceItem())->title($value->product_name)->pricePerUnit($value->price)->quantity($value->quantity);
+        }
+
+        $invoice = Invoice::make('Struk')
+            ->seller($client)
+            ->series(substr($orders->order_number, 0, -6))
+            ->status($orders->status)
+            ->buyer($customer)
+            ->currencySymbol('Rp. ')
+            ->currencyFormat('{SYMBOL}{VALUE}')
+            ->currencyThousandsSeparator('.')
+            ->filename($client->name . ' ' . $customer->name)
+            ->addItems($item);
+
+        return $invoice->stream();
     }
 }

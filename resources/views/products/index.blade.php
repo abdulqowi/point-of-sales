@@ -46,7 +46,8 @@
                         <th style="width: 1%">No.</th>
                         <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
                         <th>Nama</th>
-                        <th>Harga</th>
+                        <th>Harga Jual</th>
+                        <th>Harga Beli</th>
                         <th>Kuantitas</th>
                         <th>Kategori</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
@@ -90,12 +91,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="quantity" id="quantity" required>
+                        <label for="selling_price">Harga Jual</label>
+                        <input type="number" class="form-control form-control-sm mr-2" name="selling_price" id="selling_price" required>
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="price" id="price" required>
+                        <label for="purchase_price">Harga Beli</label>
+                        <input type="number" class="form-control form-control-sm mr-2" name="purchase_price" id="purchase_price" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -181,7 +182,8 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
                     {data: 'name', name: 'name'},
-                    {data: 'price', name: 'price'},
+                    {data: 'selling_price', name: 'selling_price', className: 'dt-body-right'},
+                    {data: 'purchase_price', name: 'purchase_price', className: 'dt-body-right'},
                     {data: 'quantity', name: 'quantity'},
                     {data: 'category_id', name: 'category.name'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
@@ -229,8 +231,8 @@
                     $('#saveBtn').html("Simpan");
                     $('#product_id').val(data.id);
                     $('#name').val(data.name);
-                    $('#price').val(data.price);
-                    $('#quantity').val(data.quantity);
+                    $('#selling_price').val(data.selling_price);
+                    $('#purchase_price').val(data.purchase_price);
                     $('#category_id').val(data.category_id);
                 })
             });

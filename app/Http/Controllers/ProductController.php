@@ -39,7 +39,7 @@ class ProductController extends Controller
                         </div>';
                     return $btn;
                 })
-                ->rawColumns(['status', 'checkbox', 'image', 'action'])
+                ->rawColumns(['status', 'checkbox', 'action'])
                 ->make(true);
         }
         return view('products.index', [
@@ -61,8 +61,8 @@ class ProductController extends Controller
             ['id' => request('product_id')],
             [
                 'name' => request('name'),
-                'price' => request('price'),
-                'quantity' => request('quantity'),
+                'selling_price' => request('selling_price'),
+                'purchase_price' => request('purchase_price'),
                 'category_id' => request('category_id'),
             ]
         );

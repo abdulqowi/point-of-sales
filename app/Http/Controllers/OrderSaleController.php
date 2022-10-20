@@ -86,7 +86,7 @@ class OrderSaleController extends Controller
                     ]);
 
                     Product::where('id', $orderDetail->product_id)->update([
-                        'quantity' => DB::raw("quantity + $orderDetail->quantity")
+                        'quantity' => DB::raw("quantity - $orderDetail->quantity")
                     ]);
                 }
             });
@@ -97,5 +97,26 @@ class OrderSaleController extends Controller
 
             return response()->json($message);
         }
+
+
+    }
+
+    public function destroySales($id)
+    {
+        $order = Order::with('products')->find($id);
+        $orderDetail = DB::table('order_details')->where('order_id', $order->id)->get();
+        foreach ($orderDetail as $value) {
+        Product::where('id', $value->product_id)->update([
+            'quantity' => DB::raw("quantity + $value->quantity")
+        ]);
+        }
+        $order->delete();
+        return redirect()->back();
+    }
+
+    public function showSales($id)
+    {
+        $order = Order::with('order_details')->find($id);
+        return response()->json($order);
     }
 }

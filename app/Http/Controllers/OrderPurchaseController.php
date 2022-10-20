@@ -107,9 +107,9 @@ class OrderPurchaseController extends Controller
         $order = Order::with('products')->find($id);
         $orderDetail = DB::table('order_details')->where('order_id', $order->id)->get();
         foreach ($orderDetail as $value) {
-            Product::where('id', $value->product_id)->update([
-                'quantity' => DB::raw("quantity-$value->quantity")
-            ]);
+        Product::where('id', $value->product_id)->update([
+            'quantity' => DB::raw("quantity-$value->quantity")
+        ]);
         }
         $order->delete();
         return redirect()->back();

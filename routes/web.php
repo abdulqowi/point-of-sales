@@ -30,12 +30,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
     Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
 
+    // Order Penjualan
     Route::get('orders/sales', [OrderSaleController::class, 'sales'])->name('sales.index');
     Route::get('orders/sales/create', [OrderSaleController::class, 'createSales'])->name('sales.create');
     Route::post('orders/sales', [OrderSaleController::class, 'storeSales'])->name('sales.store');
     Route::delete('orders/sales/{id}', [OrderSaleController::class, 'destroySales'])->name('sales.destroy');
-    Route::get('orders/purchases/{id}', [OrderPurchaseController::class, 'showSales'])->name('sales.show');
+    Route::get('orders/sales/{id}', [OrderPurchaseController::class, 'showSales'])->name('sales.show');
 
+    // Order Pembelian
     Route::get('orders/purchases', [OrderPurchaseController::class, 'purchases'])->name('purchases.index');
     Route::get('orders/purchases/create', [OrderPurchaseController::class, 'createPurchases'])->name('purchases.create');
     Route::post('orders/purchases', [OrderPurchaseController::class, 'storepurchases'])->name('purchases.store');

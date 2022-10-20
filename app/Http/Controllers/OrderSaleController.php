@@ -15,9 +15,6 @@ class OrderSaleController extends Controller
             $orders = Order::whereNotNull('customer_id')->latest()->get();
             return DataTables::of($orders)
                 ->addIndexColumn()
-                ->addColumn('checkbox', function ($row) {
-                    return '<input type="checkbox" name="checkbox" id="check" class="checkbox" data-id="' . $row->id . '">';
-                })
                 ->editColumn('customer_id', function (Order $order) {
                     return $order->customer->name;
                 })
@@ -27,8 +24,8 @@ class OrderSaleController extends Controller
                             <a class="badge bg-navy dropdown-toggle dropdown-icon" data-toggle="dropdown">
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showProduct" class="btn btn-sm btn-primary">View</a>
-                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" id="showSales" class="btn btn-sm btn-primary">View</a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-sm" id="editProduct">Print</a>
                                 <form action=" ' . route('products.destroy', $row->id) . '" method="POST">
                                     <button type="submit" class="dropdown-item" onclick="return confirm(\'Apakah yakin ingin menghapus ini?\')">Hapus</button>
                                 ' . csrf_field() . '
@@ -48,14 +45,6 @@ class OrderSaleController extends Controller
 
     public function createSales()
     {
-        return view('orders.sales.create', [
-            'products' => Product::all(),
-            'customers' => Customer::all(),
-        ]);
-    }
-
-    public function storeSales()
-    {
         $record = Order::latest()->first();
         if (isset($record)) {
             $expNum = explode('-', $record->order_number);
@@ -63,28 +52,50 @@ class OrderSaleController extends Controller
         } else {
             $nextInvoiceNumber = 'INV-' . date('dmy') . '-10001';
         }
-
-        // $this->validate(request(), [
-        //     'name' => 'required',
-        //     'category_id' => 'required',
-        // ]);
-
-        $order = Order::create([
-            'date' => request('date'),
-            'order_number' => $nextInvoiceNumber,
-            'status' => request('status') ?? 'pending',
-            'customer_id' => request('customer_id'),
+        return view('orders.sales.create', [
+            'products' => Product::all(),
+            'customers' => Customer::all(),
+            'orderNumber' => $nextInvoiceNumber,
         ]);
-        for ($i = 0; $i < count(request('product')); $i++) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'product_id' => request('product')[$i],
-                'quantity' => request('quantity')[$i],
-                'price' => request('price')[$i],
-            ]);
+    }
+
+    public function storeSales()
+    {
+        if (request()->ajax()) {
+            $record = Order::latest()->first();
+            if (isset($record)) {
+                $expNum = explode('-', $record->order_number);
+                $nextInvoiceNumber = $expNum[0] . '-' . $expNum[1] . '-' . ($expNum[2] + '1');
+            } else {
+                $nextInvoiceNumber = 'INV-' . date('dmy') . '-10001';
+            }
+
+            DB::transaction(function () use ($nextInvoiceNumber) {
+                $order = Order::create([
+                    'date' => request('date'),
+                    'order_number' => $nextInvoiceNumber,
+                    'status' => request('status') ?? 'pending',
+                    'customer_id' => request('customer_id'),
+                ]);
+                for ($i = 0; $i < count(request('product')); $i++) {
+                    $orderDetail = OrderDetail::create([
+                        'order_id' => $order->id,
+                        'product_id' => request('product')[$i],
+                        'quantity' => request('quantity')[$i],
+                        'price' => request('price')[$i],
+                    ]);
+
+                    Product::where('id', $orderDetail->product_id)->update([
+                        'quantity' => DB::raw("quantity + $orderDetail->quantity")
+                    ]);
+                }
+            });
+
+            $message = [
+                'success' => 'Data berhasil disimpan',
+            ];
+
+            return response()->json($message);
         }
-
-
-        return redirect()->route('sales.index');
     }
 }

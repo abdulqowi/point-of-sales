@@ -5,8 +5,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Auth\LoginController;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
-use App\Http\Controllers\{OrderController, ProductController};
+use App\Http\Controllers\OrderPurchaseController;
+use App\Http\Controllers\{HomeController, OrderSaleController, ProductController};
 
 /*
 |--------------------------------------------------------------------------
@@ -26,16 +26,25 @@ Route::post('logout',  [LoginController::class, 'logout'])->name('logout');
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::resource('products', ProductController::class);
     Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
 
-    Route::get('orders/sales', [OrderController::class, 'sales'])->name('sales.index');
-    Route::get('orders/sales/create', [OrderController::class, 'createSales'])->name('sales.create');
-    Route::post('orders/sales', [OrderController::class, 'storeSales'])->name('sales.store');
-    Route::delete('orders/sales/{id}', [OrderController::class, 'destroySales'])->name('sales.destroy');
+    // Order Penjualan
+    Route::get('orders/sales', [OrderSaleController::class, 'sales'])->name('sales.index');
+    Route::get('orders/sales/create', [OrderSaleController::class, 'createSales'])->name('sales.create');
+    Route::post('orders/sales', [OrderSaleController::class, 'storeSales'])->name('sales.store');
+    Route::delete('orders/sales/{id}', [OrderSaleController::class, 'destroySales'])->name('sales.destroy');
+    Route::get('orders/sales/{id}', [OrderSaleController::class, 'showSales'])->name('sales.show');
+    Route::get('orders/sales/{id}/print', [OrderSaleController::class, 'printSales'])->name('sales.print');
+
+    // Order Pembelian
+    Route::get('orders/purchases', [OrderPurchaseController::class, 'purchases'])->name('purchases.index');
+    Route::get('orders/purchases/create', [OrderPurchaseController::class, 'createPurchases'])->name('purchases.create');
+    Route::post('orders/purchases', [OrderPurchaseController::class, 'storepurchases'])->name('purchases.store');
+    Route::delete('orders/purchases/{id}', [OrderPurchaseController::class, 'destroyPurchases'])->name('purchases.destroy');
+    Route::get('orders/purchases/{id}', [OrderPurchaseController::class, 'showPurchases'])->name('purchases.show');
+    Route::get('orders/purchases/{id}/print', [OrderPurchaseController::class, 'printPurchases'])->name('purchases.print');
 
 });
 Route::resource('products', ProductController::class);
@@ -44,5 +53,6 @@ Route::resource('categories', CategoryController::class);
 Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');
 Route::resource('customers', CustomerController::class);
 Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');
+
 Route::resource('suppliers', SupplierController::class);
 Route::post('suppliers/delete-selected', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');

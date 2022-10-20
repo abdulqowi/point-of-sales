@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
@@ -19,9 +18,10 @@ class ProductSeeder extends Seeder
         for($i = 0; $i < 1000; $i++) {
             Product::create([
                 'name' => $faker->name,
-                'price' => rand(1000,1220000),
-                'quantity' => rand(0,100),
-                'category_id' => rand(1,13),                
+                'selling_price' => rand(10000,100000),
+                'purchase_price' => rand(10000,100000),
+                'quantity' => 0,
+                'category_id' => rand(1,13),
             ]);
     }
     }

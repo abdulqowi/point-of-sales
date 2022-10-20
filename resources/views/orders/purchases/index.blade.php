@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Data Transaksi'])
+@extends('layouts.app', ['title' => 'Data Pembelian'])
 
 @section('content')
 
@@ -7,11 +7,12 @@
     <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-        <h1 class="m-0">{{ $title ?? '' }}</h1>
+        <h1 class="m-0">{{ $title ?? 'Data Pembelian' }}</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active"></li>
+            <li class="breadcrumb-item">Dashboard</li>
+            <li class="breadcrumb-item active">Pembelian</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -19,24 +20,56 @@
 </div>
 <!-- /.content-header -->
 
+<div class="container-fluid">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-6 col-6">
+            <!-- small box -->
+            <div class="small-box bg-navy">
+                <div class="inner">
+                    <h3>Rp. {{ number_format($orders->where('status', 'paid')->sum('total_price')) }}</h3>
+
+                    <p>Pembelian Sudah Dibayar</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-6 col-6">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>Rp. {{ number_format($orders->where('status', 'pending')->sum('total_price')) }}</h3>
+
+                    <p>Pembelian Belum Dibayar</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+</div><!-- /.container-fluid -->
+
 <div class="container-fluid mb-3 d-flex justify-content-end">
     <div class="row">
         <div class="col-12">
-            {{-- <a class="btn btn-sm btn-success" data-toggle="modal" data-target="#importExcel">Impor <i
-                class="fa fa-file-import"></i></a>
-            <a href="{{ route('members.export') }}" class="btn btn-sm btn-success">Ekspor <i class="fa fa-file-export"></i></a>
-            <a href="{{ route('members.printpdf') }}" class="btn btn-sm btn-danger">Print PDF <i class="fa fa-file-pdf"></i></a> --}}
-            <button class="btn btn-sm bg-navy" id="createNewItem">Tambah <i class="fa fa-plus"></i></button>
+            <a class="btn btn-sm bg-navy" href="{{ route('purchases.create') }}">Tambah Pembelian <i class="fa fa-plus"></i></a>
             <button class="btn btn-sm btn-danger d-none" id="deleteAllBtn">Hapus Semua</button>
         </div>
     </div>
 </div>
 
 <div class="container-fluid">
-    {{-- @include('components.alerts') --}}
     <div class="card">
         <div class="card-header bg-navy">
-            <h3 class="card-title">Data Produk</h3>
+            <h3 class="card-title">Data Pembelian</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
@@ -44,10 +77,11 @@
                 <thead class="bg-navy">
                     <tr>
                         <th style="width: 1%">No.</th>
-                        <th class="text-center"><input type="checkbox" name="main_checkbox"><label></label></th>
                         <th>Kode</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
-                        <th>Pelanggan</th>
+                        <th>Pemasok</th>
+                        <th>Total</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -61,28 +95,43 @@
     <!-- /.card -->
 </div>
 
-<!-- MODAL SHOW BOOK -->
-{{-- <div class="modal fade show" id="modalProduct" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
+<!-- MODAL SHOW PURCHASE -->
+<div class="modal fade show" id="modalPurchase" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Detail Buku</h4>
+                <h4 class="modal-title">Detail Order</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><img src="" id="imageMember" alt="default.jpg" class="img-fluid" width="50%"></li>
-                    <li class="list-group-item">Nama : <i id="nameMember"></i></li>
-                    <li class="list-group-item">Jenis Kelamin : <i id="genderMember"></i></li>
-                    <li class="list-group-item">Email : <i id="emailMember"></i></li>
-                    <li class="list-group-item">No HP : <i id="category"></i></li>
-                    <li class="list-group-item">Alamat : <i id="addressMember"></i></li>
-                    <li class="list-group-item">Status : <i id="statusMember"></i></li>
-                    <li class="list-group-item">Jumlah Pinjaman : <i id="totalLoan"></i></li>
-                    <li class="list-group-item">Jumlah Denda : <i id=""></i></li>
-                </ul>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Kode : <i id="orderNumber"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="date"></i></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Status : <i id="status"></i></li>
+                            <li class="list-group-item">Total : <i id="total"></i></li>
+                        </ul>
+                    </div>
+                </div>
+                <table class="table table-sm table-bordered table-striped" id="table">
+                    <thead class="bg-navy">
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kuantitas</th>
+                            <th>Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal">
+
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -91,7 +140,7 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-</div> --}}
+</div>
 
 @endsection
 
@@ -103,7 +152,6 @@
 
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/plugins/toastr/toastr.min.css">
-    <script src="{{ asset('assets') }}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 @endpush
 @push('scripts')
 
@@ -122,19 +170,19 @@
         });
 
         $(function () {
-            bsCustomFileInput.init();
             let table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
 
-                ajax: "{{ route('orders.index') }}",
+                ajax: "{{ route('purchases.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
-                    {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false, className: 'dt-body-center'},
                     {data: 'order_number', name: 'order_number'},
+                    {data: 'date', name: 'date'},
                     {data: 'status', name: 'status'},
-                    {data: 'customer_id', name: 'customer.name'},
+                    {data: 'supplier_id', name: 'supplier.name'},
+                    {data: 'total_price', name: 'total_price'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){
@@ -155,18 +203,25 @@
                 $('#modal-md').modal('show');
             });
 
-            // $('body').on('click', '#showProduct', function() {
-            //     var product_id = $(this).data('id');
-            //     $.get("{{ route('products.index') }}" + '/' + product_id, function(data) {
-            //         $('#modalProduct').modal('show');
-            //         $('#product_id').val(data.id);
-            //         // $('#imageProduct').attr('src', '/storage/' + data.image);
-            //         $('#name').html(data.name);
-            //         $('#price').html(data.gender);
-            //         $('#quantity').html(data.quantity);
-            //         $('#category').html(data.phone_number);
-            //     })
-            // });
+            $('body').on('click', '#showPurchase', function() {
+                var purchase_id = $(this).data('id');
+                $.get("{{ route('purchases.index') }}" + '/' + purchase_id, function(data) {
+                    $('#modalPurchase').modal('show');
+                    $('#product_id').val(data.id);
+                    $('#date').html(data.date);
+                    $('#orderNumber').html(data.order_number);
+                    $('#status').html(data.status);
+                    $('#total').html(data.total_price);
+                    $.each(data.order_details, function (key, value) {
+                        $('tbody#modal').append(`<tr class="products">
+                            <td>${value.product_name}</td>
+                            <td>${value.quantity}</td>
+                            <td>${value.price}</td>
+                        </tr>`);
+                    })
+                })
+                $('tr.products').remove();
+            });
 
             $('body').on('click', '#editProduct', function () {
                 var product_id = $(this).data('id');

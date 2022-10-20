@@ -236,6 +236,8 @@
                 });
             });
 
+
+
             $(document).on('click','input[name="main_checkbox"]', function(){
                 if (this.checked) {
                     $('input[name="checkbox"]').each(function(){

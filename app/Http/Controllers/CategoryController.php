@@ -55,16 +55,16 @@ class CategoryController extends Controller
             ['id' => request('category_id')],
             ['name' => request('name')],
         );
-        
 
-        
+
+
 
     }
     public function destroy(Category $category) {
         $category->delete();
         return back();
     }
-    
+
     public function edit(Category $category){
         return response()->json($category);
     }

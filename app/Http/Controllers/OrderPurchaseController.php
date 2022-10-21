@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Supplier;
-use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use LaravelDaily\Invoices\Classes\Buyer;
-use LaravelDaily\Invoices\Classes\Party;
 use Yajra\DataTables\Facades\DataTables;
 use LaravelDaily\Invoices\Facades\Invoice;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
+use LaravelDaily\Invoices\Classes\{Buyer, Party};
+use App\Models\{Order, Product, Supplier, OrderDetail};
 
 class OrderPurchaseController extends Controller
 {
@@ -24,6 +20,11 @@ class OrderPurchaseController extends Controller
                 ->addIndexColumn()
                 ->editColumn('supplier_id', function (Order $order) {
                     return $order->supplier->name;
+                })
+                ->editColumn('status', function (Order $order) {
+                    $paid = '<form action="'.route('sales.status', $order->id).'" method="post">'.csrf_field().'<input type="hidden" name="status" value="pending"><button type="submit" class="btn btn-sm btn-primary">Paid</button></form>';
+                    $pending = '<form action="'.route('sales.status', $order->id).'" method="post">'.csrf_field().'<input type="hidden" name="status" value="paid"><button type="submit" class="btn btn-sm btn-warning">Pending</button></form>';
+                    return $order->status == 'paid' ? $paid : $pending;
                 })
                 ->addColumn('action', function ($row) {
                     $btn =
@@ -42,7 +43,7 @@ class OrderPurchaseController extends Controller
                         </div>';
                     return $btn;
                 })
-                ->rawColumns(['checkbox', 'action'])
+                ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
         return view('orders.purchases.index', [

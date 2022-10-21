@@ -11,7 +11,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = ['date', 'order_number', 'status', 'customer_id', 'supplier_id'];
-    protected $appends = ['total_price'];
+    protected $appends = ['total_price', 'total_quantity'];
 
     public function customer()
     {
@@ -41,8 +41,11 @@ class Order extends Model
             ->value('SUM(price * quantity)');
     }
 
-    // public function getProductNameAttribute()
-    // {
-    //     return Product::where('id', $)->value('name');
-    // }
+    public function getTotalQuantityAttribute()
+    {
+        return DB::table('order_details')
+            ->select(DB::raw('SUM(quantity)'))
+            ->where('order_id', $this->id)
+            ->value('SUM(quantity)');
+    }
 }

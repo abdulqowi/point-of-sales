@@ -1,23 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\OrderPurchaseController;
-use App\Http\Controllers\{HomeController, OrderSaleController, ProductController};
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\{CategoryController, CustomerController, SupplierController, OrderPurchaseController, HomeController, OrderSaleController, ProductController};
 
 
 Route::get('login', [LoginController::class, 'showLoginForm']);
@@ -27,6 +12,7 @@ Route::post('logout',  [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Produk Modul
     Route::resource('products', ProductController::class);
     Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
 
@@ -37,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('orders/sales/{id}', [OrderSaleController::class, 'destroySales'])->name('sales.destroy');
     Route::get('orders/sales/{id}', [OrderSaleController::class, 'showSales'])->name('sales.show');
     Route::get('orders/sales/{id}/print', [OrderSaleController::class, 'printSales'])->name('sales.print');
+    Route::post('orders/sales/{id}/status', [OrderSaleController::class, 'updateStatus'])->name('sales.status');
 
     // Order Pembelian
     Route::get('orders/purchases', [OrderPurchaseController::class, 'purchases'])->name('purchases.index');
@@ -46,13 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::get('orders/purchases/{id}', [OrderPurchaseController::class, 'showPurchases'])->name('purchases.show');
     Route::get('orders/purchases/{id}/print', [OrderPurchaseController::class, 'printPurchases'])->name('purchases.print');
 
+    /** Categories */
+    Route::resource('categories', CategoryController::class);
+    Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');
+    /** Customer */
+    Route::resource('customers', CustomerController::class);
+    Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');
+    /** Supplier */
+    Route::resource('suppliers', SupplierController::class);
+    Route::post('suppliers/delete-selected', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');
 });
-Route::resource('products', ProductController::class);
-Route::post('products/delete-selected', [ProductController::class, 'deleteSelected'])->name('products.deleteSelected');
-Route::resource('categories', CategoryController::class);
-Route::post('categories/delete-selected', [CategoryController::class, 'deleteSelected'])->name('categories.deleteSelected');
-Route::resource('customers', CustomerController::class);
-Route::post('customers/delete-selected', [CustomerController::class, 'deleteSelected'])->name('customers.deleteSelected');
-
-Route::resource('suppliers', SupplierController::class);
-Route::post('suppliers/delete-selected', [SupplierController::class, 'deleteSelected'])->name('suppliers.deleteSelected');

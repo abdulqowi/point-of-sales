@@ -21,6 +21,14 @@ class OrderSaleController extends Controller
                 ->editColumn('customer_id', function (Order $order) {
                     return $order->customer->name;
                 })
+                ->editColumn('total_quantity', function (Order $order) {
+                    return -$order->total_quantity;
+                })
+                ->editColumn('status', function (Order $order) {
+                    $paid = '<form action="'.route('sales.status', $order->id).'" method="post">'.csrf_field().'<input type="hidden" name="status" value="pending"><button type="submit" class="btn btn-sm btn-primary">Paid</button></form>';
+                    $pending = '<form action="'.route('sales.status', $order->id).'" method="post">'.csrf_field().'<input type="hidden" name="status" value="paid"><button type="submit" class="btn btn-sm btn-warning">Pending</button></form>';
+                    return $order->status == 'paid' ? $paid : $pending;
+                })
                 ->addColumn('action', function ($row) {
                     $btn =
                         '<div class="btn-group">
@@ -38,7 +46,7 @@ class OrderSaleController extends Controller
                         </div>';
                     return $btn;
                 })
-                ->rawColumns(['checkbox', 'action'])
+                ->rawColumns(['checkbox', 'action', 'status'])
                 ->make(true);
         }
         return view('orders.sales.index', [
@@ -107,9 +115,9 @@ class OrderSaleController extends Controller
         $order = Order::with('products')->find($id);
         $orderDetail = DB::table('order_details')->where('order_id', $order->id)->get();
         foreach ($orderDetail as $value) {
-        Product::where('id', $value->product_id)->update([
-            'quantity' => DB::raw("quantity + $value->quantity")
-        ]);
+            Product::where('id', $value->product_id)->update([
+                'quantity' => DB::raw("quantity + $value->quantity")
+            ]);
         }
         $order->delete();
         return redirect()->back();
@@ -157,5 +165,14 @@ class OrderSaleController extends Controller
             ->addItems($item);
 
         return $invoice->stream();
+    }
+
+    public function updateStatus($id)
+    {
+        $order = Order::find($id);
+        $order->update([
+            'status' => request('status')
+        ]);
+        return redirect()->back();
     }
 }

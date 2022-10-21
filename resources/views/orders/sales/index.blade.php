@@ -80,6 +80,7 @@
                         <th>Status</th>
                         <th>Pelanggan</th>
                         <th>Total</th>
+                        <th>Kuantitas</th>
                         <th class="text-center" style="width: 5%"><i class="fas fa-cogs"></i> </th>
                     </tr>
                 </thead>
@@ -182,6 +183,7 @@
                     {data: 'status', name: 'status'},
                     {data: 'customer_id', name: 'customer.name'},
                     {data: 'total_price', name: 'total_price', class: 'dt-body-right'},
+                    {data: 'total_quantity', name: 'total_quantity'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],
             }).on('draw', function(){
@@ -211,6 +213,7 @@
                     $('#orderNumber').html(data.order_number);
                     $('#status').html(data.status);
                     $('#total').html(data.total_price);
+                    $('#kuantitas').html(data.total_quantity);
                     $.each(data.order_details, function (key, value) {
                         $('tbody#modal').append(`<tr class="products">
                             <td>${value.product_name}</td>

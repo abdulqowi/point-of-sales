@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('RESTRICT');
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('RESTRICT');
             $table->string('order_number')->unique();
+            // $table->decimal('total_price', 15, 2);
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();
         });

@@ -12,6 +12,7 @@ class Order extends Model
 
     protected $fillable = ['date', 'order_number', 'status', 'customer_id', 'supplier_id'];
     protected $appends = ['total_price', 'total_quantity'];
+    protected $totalPrice = [];
 
     public function customer()
     {
@@ -48,4 +49,9 @@ class Order extends Model
             ->where('order_id', $this->id)
             ->value('SUM(quantity)');
     }
+
+    // public function sumTotalPrice()
+    // {
+    //     return array_sum($this->totalPrice);
+    // }
 }

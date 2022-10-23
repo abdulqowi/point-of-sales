@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
 use LaravelDaily\Invoices\Invoice;
+use App\Http\Requests\OrderRequest;
 use LaravelDaily\Invoices\Classes\Buyer;
 use LaravelDaily\Invoices\Classes\Party;
 use Yajra\DataTables\Facades\DataTables;
@@ -70,8 +72,10 @@ class OrderSaleController extends Controller
         ]);
     }
 
-    public function storeSales()
+    public function storeSales(OrderRequest $request)
     {
+        $request->validated();
+
         if (request()->ajax()) {
             $record = Order::latest()->first();
             if (isset($record)) {
@@ -81,31 +85,37 @@ class OrderSaleController extends Controller
                 $nextInvoiceNumber = 'INV-' . date('dmy') . '-10001';
             }
 
-            DB::transaction(function () use ($nextInvoiceNumber) {
-                $order = Order::create([
-                    'date' => request('date'),
-                    'order_number' => $nextInvoiceNumber,
-                    'status' => request('status') ?? 'pending',
-                    'customer_id' => request('customer_id'),
-                ]);
-                for ($i = 0; $i < count(request('product')); $i++) {
-                    $orderDetail = OrderDetail::create([
-                        'order_id' => $order->id,
-                        'product_id' => request('product')[$i],
-                        'quantity' => request('quantity')[$i],
-                        'price' => request('price')[$i],
+            try {
+                DB::transaction(function () use ($nextInvoiceNumber) {
+                    $order = Order::create([
+                        'date' => request('date'),
+                        'order_number' => $nextInvoiceNumber,
+                        'status' => request('status') ?? 'pending',
+                        'customer_id' => request('customer_id'),
                     ]);
+                    for ($i = 0; $i < count(request('product')); $i++) {
+                        $orderDetail = OrderDetail::create([
+                            'order_id' => $order->id,
+                            'product_id' => request('product')[$i],
+                            'quantity' => request('quantity')[$i],
+                            'price' => request('price')[$i],
+                        ]);
 
-                    Product::where('id', $orderDetail->product_id)->update([
-                        'quantity' => DB::raw("quantity - $orderDetail->quantity")
-                    ]);
-                }
-            });
+                        Product::where('id', $orderDetail->product_id)->update([
+                            'quantity' => DB::raw("quantity - $orderDetail->quantity")
+                        ]);
+                    }
+                });
 
-            $message = [
-                'success' => 'Data berhasil disimpan',
-            ];
+                $message = [
+                    'success' => 'Data berhasil disimpan',
+                ];
 
+            } catch (Exception $e) {
+                $message = [
+                    'error' => $e->getMessage(),
+                ];
+            }
             return response()->json($message);
         }
     }

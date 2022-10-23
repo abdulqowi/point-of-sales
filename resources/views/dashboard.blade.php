@@ -110,7 +110,7 @@
                 </section>
                 <!-- /.Left col -->
 
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                {{-- <!-- right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable ui-sortable">
                      <!-- Custom tabs (Charts with tabs)-->
                      <div class="card">
@@ -134,7 +134,7 @@
                     </div>
                     <!-- /.card -->
                 </section>
-                <!-- right col -->
+                <!-- right col --> --}}
             </div>
         </div><!-- /.container-fluid -->
     </section>

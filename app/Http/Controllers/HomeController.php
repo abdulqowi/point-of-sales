@@ -16,11 +16,15 @@ class HomeController extends Controller
         foreach ($year as $value) {
             $pemasukan = Order::with('order_details')
                 ->where(DB::raw("DATE_FORMAT(date, '%m')"), $value)
+                ->where('status', 'paid')
                 ->whereNotNull('customer_id')
+                ->whereYear('date', date('Y'))
                 ->get();
             $pengeluaran = Order::with('order_details')
                 ->where(DB::raw("DATE_FORMAT(date, '%m')"), $value)
+                ->where('status', 'paid')
                 ->whereNotNull('supplier_id')
+                ->whereYear('date', date('Y'))
                 ->get();
             $income[] = $pemasukan->sum('total_price');
             $expend[] = $pengeluaran->sum('total_price');

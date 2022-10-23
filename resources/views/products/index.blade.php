@@ -184,7 +184,7 @@
                     {data: 'name', name: 'name'},
                     {data: 'selling_price', name: 'selling_price', className: 'dt-body-right'},
                     {data: 'purchase_price', name: 'purchase_price', className: 'dt-body-right'},
-                    {data: 'quantity', name: 'quantity'},
+                    {data: 'quantity', name: 'quantity', className: 'dt-body-right'},
                     {data: 'category_id', name: 'category.name'},
                     {data: 'action', name: 'action', orderable: false, searchable: false, className: 'dt-body-center'},
                 ],

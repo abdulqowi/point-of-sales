@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="customer_id">Pelanggan</label>
+                                <label for="customer_id">Pelanggan <span class="text-danger">*</span></label>
                                 <select name="customer_id" class="form-control form-control-sm select2">
                                     <option selected disabled>Pilih Pelanggan</option>
                                     @foreach ($customers as $customer)
@@ -47,7 +47,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="product_id">Product</label>
+                                <label for="product_id">Product <span class="text-danger">*</span></label>
                                 <select name="product_id" id="btnAddInput" class="form-control form-control-sm select2">
                                     <option selected disabled>Pilih Produk</option>
                                     @foreach ($products as $product)
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date">Tanggal</label>
+                                <label for="date">Tanggal <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control form-control-sm" name="date">
                             </div>
                             <div class="form-group">
@@ -76,9 +76,9 @@
                         <thead class="bg-navy">
                             <tr>
                                 <th>Nama</th>
-                                <th>Kuantiti</th>
                                 <th>Harga</th>
-                                <th>Total</th>
+                                <th>Stok Tersisa</th>
+                                <th>Kuantiti</th>
                                 <th><i class="fa fa-cog"></i></th>
                             </tr>
                         </thead>
@@ -99,7 +99,7 @@
                                     <tbody>
                                         <tr>
                                             <th style="width:50%">Total : </th>
-                                            <td id="subtotal"></td>
+                                            <td><input type="text" class="form-control form-control-sm" id="total_banget" disabled></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -165,20 +165,24 @@
                                         "{{ route('sales.index') }}")
                                 }
                             })
+                        } else {
+                            if (response.error) {
+                                swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    html: `${response.error}`,
+                                });
+                            }
                         }
                     },
-                    error: function(response) {
+                    error: function(data) {
                         $('.btnSaveAll').removeAttr('disabled');
                         $('.btnSaveAll').html('Simpan');
-                        // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                        if (response.success) {
-                            swal.fire({
-                                icon: 'Gsgal',
-                                title: 'Berhasil',
-                                html: `${response.success}`,
-                            });
-                        }
-                        // console.log (xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Gagal disimpan',
+                            html: `${error.statusText}`,
+                        });
                     }
                 });
                 return false;
@@ -188,21 +192,20 @@
                 e.preventDefault();
                 var product_id = $(this).children(":selected").attr("data-id");
                 $.get("{{ route('products.index') }}" + '/' + product_id, function(data) {
-                    console.log(data.name);
                     $('.formAdd').append(`
                     <tr>
                         <td>
                             <input type="hidden" name="product[]" value=${data.id}>
-                            <input type="text" class="form-control form-control-sm" disabled value=${data.name}>
+                            <input type="text" class="form-control form-control-sm" value="${data.name}" disabled>
+                        </td>
+                        <td>
+                            <input type="text" name="price[]" class="form-control form-control-sm" value=${data.selling_price} readonly>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm" value=${data.quantity} disabled>
                         </td>
                         <td>
                             <input type="number" name="quantity[]" id="quantity" class="form-control form-control-sm">
-                        </td>
-                        <td>
-                            <input type="text" name="price[]" class="form-control form-control-sm" value=${data.selling_price}>
-                        </td>
-                        <td>
-                            <input type="number" name="total_price[]" class="form-control form-control-sm" disabled>
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger btnDeleteForm"><i class="fa fa-trash"></i></button>
@@ -212,10 +215,11 @@
                 })
             });
 
-            // $('input[name="quantity"]').on("input", function() {
-            //     let price = $('input[name="price"]').val();
-            //     $('input[name="total_price"]').val(this.value * price);
-            // });
+            $('input[name="quantity"]').on("input", function() {
+                let price = $('input[name="price"]').val();
+                $('#total_banget').val(this.value * price);
+                console.log(this.value);
+            });
 
             $(document).on('click', '.btnDeleteForm', function(e) {
                 e.preventDefault();

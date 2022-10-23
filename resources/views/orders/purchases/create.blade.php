@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ $title ?? '' }}</h1>
+                    <h1 class="m-0">{{ $title ?? 'Tambah Pembelian' }}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="supplier_id">Pemasok</label>
+                                <label for="supplier_id">Pemasok <span class="text-danger">*</span></label>
                                 <select name="supplier_id" class="form-control form-control-sm select2">
                                     <option selected disabled>Pilih Pemasok</option>
                                     @foreach ($suppliers as $supplier)
@@ -48,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="product_id">Product</label>
+                                <label for="product_id">Product <span class="text-danger">*</span></label>
                                 <select name="product_id" id="btnAddInput" class="form-control form-control-sm select2">
                                     <option selected disabled>Pilih Produk</option>
                                     @foreach ($products as $product)
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date">Tanggal</label>
+                                <label for="date">Tanggal <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control form-control-sm" name="date">
                             </div>
                             <div class="form-group">
@@ -77,9 +77,9 @@
                         <thead class="bg-navy">
                             <tr>
                                 <th>Nama</th>
-                                <th>Kuantiti</th>
                                 <th>Harga</th>
-                                <th>Total</th>
+                                <th>Stok Tersisa</th>
+                                <th>Kuantiti</th>
                                 <th><i class="fa fa-cog"></i></th>
                             </tr>
                         </thead>
@@ -166,20 +166,25 @@
                                         "{{ route('purchases.index') }}")
                                 }
                             })
+                        } else {
+                            if (response.error) {
+                                console.log(response)
+                                swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    html: `${response.error}`,
+                                });
+                            }
                         }
                     },
-                    error: function(response) {
+                    error: function(error) {
                         $('.btnSaveAll').removeAttr('disabled');
                         $('.btnSaveAll').html('Simpan');
-                        // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                        if (response.success) {
-                            swal.fire({
-                                icon: 'Gsgal',
-                                title: 'Berhasil',
-                                html: `${response.success}`,
-                            });
-                        }
-                        // console.log (xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Gagal disimpan',
+                            html: `${error.statusText}`,
+                        });
                     }
                 });
                 return false;
@@ -189,21 +194,20 @@
                 e.preventDefault();
                 var product_id = $(this).children(":selected").attr("data-id");
                 $.get("{{ route('products.index') }}" + '/' + product_id, function(data) {
-                    console.log(data.name);
                     $('.formAdd').append(`
                     <tr>
                         <td>
                             <input type="hidden" name="product[]" value=${data.id}>
-                            <input type="text" class="form-control form-control-sm" disabled value=${data.name}>
+                            <input type="text" class="form-control form-control-sm" disabled value="${data.name}">
+                        </td>
+                        <td>
+                            <input type="number" name="price[]" class="form-control form-control-sm" value="${data.purchase_price}" readonly>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm" disabled value="${data.quantity}">
                         </td>
                         <td>
                             <input type="number" name="quantity[]" id="quantity" class="form-control form-control-sm">
-                        </td>
-                        <td>
-                            <input type="text" name="price[]" class="form-control form-control-sm" value=${data.purchase_price}>
-                        </td>
-                        <td>
-                            <input type="number" name="total_price[]" class="form-control form-control-sm" disabled>
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger btnDeleteForm"><i class="fa fa-trash"></i></button>
@@ -212,11 +216,6 @@
                     `);
                 })
             });
-
-            // $('input[name="quantity"]').on("input", function() {
-            //     let price = $('input[name="price"]').val();
-            //     $('input[name="total_price"]').val(this.value * price);
-            // });
 
             $(document).on('click', '.btnDeleteForm', function(e) {
                 e.preventDefault();

@@ -77,6 +77,7 @@
                     <tr>
                         <th style="width: 1%">No.</th>
                         <th>Kode</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
                         <th>Pelanggan</th>
                         <th>Total</th>
@@ -180,6 +181,7 @@
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'dt-body-center'},
                     {data: 'order_number', name: 'order_number'},
+                    {data: 'date', name: 'date'},
                     {data: 'status', name: 'status'},
                     {data: 'customer_id', name: 'customer.name'},
                     {data: 'total_price', name: 'total_price', class: 'dt-body-right'},

@@ -16,4 +16,9 @@ class OrderDetail extends Model
     {
         return Product::where('id', $this->product_id)->value('name');
     }
+
+    public function order()
+    {
+        $this->belongsTo(Order::class);
+    }
 }

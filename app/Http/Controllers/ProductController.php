@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use PDF;
 use App\Models\{Category, Order, Product};
-use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ProductRequest;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -50,9 +48,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
-        return response()->json($product);
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with('category', 'orders')->findOrFail($id);
         return response()->json($product);
     }
     public function store(ProductRequest $request)
